@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTIM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./login.component.scss">
+</head>
+<body>
+    
+     <div class="header">
+      <nav>
+        <a href="http://ctim.cpg.com.tn/portail/">
+          <img src="assets/images/logoCPGpng.png" class="logo" alt="Logo">
+        </a>
+        <ul class="nav-links">
+          <li class="dropdown"  *ngIf="isAuthenticated">
+            <a href="javascript:void(0)">Expertises</a>
+            <div class="dropdown-content">
+              <a href="expertises">View Expertises</a>
+              <a href="expertises">Add Expertise</a>
+            </div>
+          </li>
+          <li *ngIf="isAuthenticated" >
+              <a  href="appareils">Appareils</a>
+            </li>
+            <li  *ngIf="isAuthenticated">
+              <a  href="pieces">Pieces</a>
+            </li>
+          <li *ngIf="isAuthenticated">
+            <a  href="imputations">Imputations</a>
+          </li>
+          <li class="user-menu" *ngIf="isAuthenticated">
+            <a class="user-button" href="javascript:void(0)">User</a>
+            <div class="dropdown-content">
+              <a (click)="signout()">Logout</a>
+              <a href="utilisateurs">Manage</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+      <div *ngIf="view === 'B'">
+        <br><br><br><br><br>
+        <br><br><br><br><br>
+      </div>
+
+
+
+      <div class="login-page" *ngIf="view === 'A'">
+        <div class="form">
+          <form class="login-form" (ngSubmit)="signIn()">
+            <h2><i class="fas fa-lock"></i> Login</h2>
+            <input type="text" placeholder="Matricule" [(ngModel)]="matricule" name="matricule" required />
+            <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required />
+            <input type="text" placeholder="Nom et Prénom" [(ngModel)]="nom_prenom" name="nom_prenom" required/>
+            <button type="submit">Login</button>
+            <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+          </form>
+        </div>
+      </div>
+
+   
+<div *ngIf="isAuthenticated" class="welcome-section">
+        <h2>Welcome!</h2>
+        <p>Navigate through the options to manage expertises, travaux, and materiaux.</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+</body>
+</html>

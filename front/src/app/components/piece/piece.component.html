@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTIM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./piece.component.scss">
+</head>
+<body>
+    <div class="header">
+        <nav>
+          <a href="http://ctim.cpg.com.tn/portail/">
+            <img src="assets/images/logoCPGpng.png" class="logo" alt="Logo">
+          </a>
+          <ul class="nav-links">
+            <li class="dropdown" >
+              <a href="javascript:void(0)">Expertises</a>
+              <div class="dropdown-content">
+                <a href="expertises">View Expertises</a>
+                <a href="expertises">Add Expertise</a>
+              </div>
+            </li>
+            <li >
+                <a  href="appareils">Appareils</a>
+              </li>
+              <li >
+                <a  href="pieces">Pieces</a>
+              </li>
+            <li >
+              <a  href="imputations">Imputations</a>
+            </li>
+            <li class="user-menu" >
+              <a class="user-button" href="javascript:void(0)">User</a>
+              <div class="dropdown-content">
+                <a (click)="signout()">Logout</a>
+                <a href="utilisateurs">Manage</a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    
+    
+
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+<!-- ********************************************************Piece table************************************************************************* -->
+    <div >
+        <div id="search-container">
+            <input placeholder="search" id="search-input" #searchInput>
+            <button id="search-btn" (click)="search(searchInput.value)">Search</button>
+        </div>
+        
+        <div id="table-container">
+            <table id="table">
+                <thead>
+                    <tr>
+                        <th (click)="sort('code_piece')">code piece
+                            <span [ngClass]="{'arrow-up': sortColumn === 'code_piece' && sortDirection === 'asc', 'arrow-down': sortColumn === 'code_piece' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('libelle')">libelle
+                            <span [ngClass]="{'arrow-up': sortColumn === 'libelle' && sortDirection === 'asc', 'arrow-down': sortColumn === 'libelle' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('type')">type
+                            <span [ngClass]="{'arrow-up': sortColumn === 'type' && sortDirection === 'asc', 'arrow-down': sortColumn === 'type' && sortDirection === 'desc'}"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tbody>
+                        <tr *ngFor="let piece of filteredPieceList; let i = index">
+                          <td>{{piece.code_piece}}</td>
+                          <td>{{ piece.libelle }}</td>
+                          <td>{{ piece.type }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+</body>
+</html>

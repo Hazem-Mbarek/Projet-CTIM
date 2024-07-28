@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTIM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./expertise.component.scss">
+</head>
+<body>
+  <div class="header">
+    <nav>
+      <a href="http://ctim.cpg.com.tn/portail/">
+        <img src="assets/images/logoCPGpng.png" class="logo" alt="Logo">
+      </a>
+      <ul class="nav-links">
+        <li class="dropdown" >
+          <a href="javascript:void(0)">Expertises</a>
+          <div class="dropdown-content">
+            <a href="expertises">View Expertises</a>
+            <a  (click)="this.view='B'">Add Expertise</a>
+          </div>
+        </li>
+        <li >
+            <a  href="appareils">Appareils</a>
+          </li>
+          <li >
+            <a  href="pieces">Pieces</a>
+          </li>
+        <li >
+          <a  href="imputations">Imputations</a>
+        </li>
+        <li class="user-menu" >
+          <a class="user-button" href="javascript:void(0)">User</a>
+          <div class="dropdown-content">
+            <a (click)="signout()">Logout</a>
+            <a href="utilisateurs">Manage</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+    
+
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+<!-- ********************************************************Expertise table************************************************************************* -->
+    <div *ngIf="view === 'A'">
+        <div id="search-container">
+            <input placeholder="search" id="search-input" #searchInput>
+            <button id="search-btn" (click)="search(searchInput.value)">Search</button>
+        </div>
+        
+        <div id="table-container">
+            <table id="table">
+                <thead>
+                    <tr>
+                        <th (click)="sort('num_exp')">N°exp
+                            <span [ngClass]="{'arrow-up': sortColumn === 'num_exp' && sortDirection === 'asc', 'arrow-down': sortColumn === 'num_exp' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('date_exp')">Date Exp
+                            <span [ngClass]="{'arrow-up': sortColumn === 'date_exp' && sortDirection === 'asc', 'arrow-down': sortColumn === 'date_exp' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('num_dps')">N°dps
+                            <span [ngClass]="{'arrow-up': sortColumn === 'num_dps' && sortDirection === 'asc', 'arrow-down': sortColumn === 'num_dps' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('date_dps')">Date Dps
+                            <span [ngClass]="{'arrow-up': sortColumn === 'date_dps' && sortDirection === 'asc', 'arrow-down': sortColumn === 'date_dps' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('UR')">UR
+                            <span [ngClass]="{'arrow-up': sortColumn === 'UR' && sortDirection === 'asc', 'arrow-down': sortColumn === 'UR' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('section')">Section
+                            <span [ngClass]="{'arrow-up': sortColumn === 'section' && sortDirection === 'asc', 'arrow-down': sortColumn === 'section' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('state')">State
+                          <span [ngClass]="{'arrow-up': sortColumn === 'state' && sortDirection === 'asc', 'arrow-down': sortColumn === 'state' && sortDirection === 'desc'}"></span>
+                      </th>
+                        <th>Delete</th>
+                        <th>Edit</th>
+                        <th>PDF</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tbody>
+                        <tr *ngFor="let expertise of filteredExpertiseList; let i = index">
+                          <td>{{ expertise.num_exp?.toString() ?? 'N/A' }}</td>
+                          <td>{{ expertise.date_exp }}</td>
+                          <td>{{ expertise.num_dps }}</td>
+                          <td>{{ expertise.date_dps }}</td>
+                          <td>{{ expertise.UR }}</td>
+                          <td>{{ expertise.section }}</td>
+                          <td>{{ expertise.state }}</td>
+                        <td><button (click)="deleteExpertise(expertise.num_exp)">Delete</button></td>
+                        <td><button (click)="editExpertise(expertise)">Edit</button></td>
+                        <td> <button (click)="PDF(expertise.num_exp)" [disabled]="!expertise.num_exp">PDF</button></td>
+                        <td><button (click)="fetchTravaux(expertise.num_exp)">Details</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+
+<!-- ********************************************************Ajout************************************************************************* -->
+    <div id="add-expertise-container" *ngIf="view === 'B'">
+            <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+            <form (submit)="addExpertise()">
+              <label for="date_exp">Date Exp:</label>
+              <input type="date" id="date_exp" [(ngModel)]="newExpertise.date_exp" name="date_exp" required>
+        
+              <label for="num_dps">N°dps:</label>
+              <input type="number" id="num_dps" [(ngModel)]="newExpertise.num_dps" name="num_dps" required>
+        
+              <label for="date_dps">Date Dps:</label>
+              <input type="date" id="date_dps" [(ngModel)]="newExpertise.date_dps" name="date_dps" required>
+        
+              <label for="ur">UR:</label>
+              <input type="number" id="ur" [(ngModel)]="newExpertise.UR" name="ur" required>
+        
+              <label for="section">Section:</label>
+              <input type="number" id="section" [(ngModel)]="newExpertise.section" name="section" required>
+        
+              <button type="submit"  (click)="this.view='b'">Add Expertise</button>
+              <button type="button" (click)="cancelEdit()">Cancel</button>
+            </form>
+    </div>
+
+    <div id="add-travail-container" *ngIf="view === 'b'">
+
+        <form (submit)="addTravail()">
+          <label for="code_app">Code App:</label>
+          <input type="string" id="code_app" [(ngModel)]="newTravail.code_app" name="code_app" required>
+    
+          <label for="code_piece">Code Piece:</label>
+          <input type="string" id="code_piece" [(ngModel)]="newTravail.code_piece" name="code_piece" required>
+    
+          <label for="qte">Quantite:</label>
+          <input type="number" id="qte" [(ngModel)]="newTravail.qte" name="qte" required>
+    
+          <button type="submit">Add Travail</button>
+          <button type="button" (click)="this.view='A'; this.fetchExpertises();">Finish</button>
+          <button type="button" (click)="cancelEdit()">Cancel</button>
+        </form>
+</div>
+<!-- ********************************************************Modif************************************************************************* -->
+    <div id="modify-expertise-container" *ngIf="view === 'C'">
+        <form (submit)="updateExpertise()">
+          <label for="date_exp">Date Exp:</label>
+          <input type="date" id="date_exp" [(ngModel)]="newExpertise.date_exp" name="date_exp" required>
+      
+          <label for="num_dps">N°dps:</label>
+          <input type="number" id="num_dps" [(ngModel)]="newExpertise.num_dps" name="num_dps" required>
+      
+          <label for="date_dps">Date Dps:</label>
+          <input type="date" id="date_dps" [(ngModel)]="newExpertise.date_dps" name="date_dps" required>
+      
+          <label for="ur">UR:</label>
+          <input type="number" id="ur" [(ngModel)]="newExpertise.UR" name="ur" required>
+      
+          <label for="section">Section:</label>
+          <input type="number" id="section" [(ngModel)]="newExpertise.section" name="section" required>
+      
+          <button type="submit" >Modif Expertise</button>
+          <button type="button" (click)="cancelEdit()">Cancel</button>
+        </form>
+      </div>
+
+ 
+<!-- ********************************************************Travaux************************************************************************* -->
+
+<div *ngIf="view === 'D'">
+    <div id="return-container">
+      <button id="return-btn" (click)="this.view='A'; this.fetchExpertises();">Return</button>
+    </div>
+    <div id="add-container">
+      <button id="add-btn" (click)="this.view='e'">Ajout</button>
+    </div>
+    <div id="search-container">
+      <input placeholder="search" id="search-input" #searchInput>
+      <button id="search-btn" (click)="searchTrav(searchInput.value)">Search</button>
+    </div>
+  
+    <div id="table-container">
+      <table id="table">
+        <thead>
+          <tr>
+            <th (click)="sortTrav('code_app')">Code Appareil
+              <span [ngClass]="{'arrow-up': sortColumn === 'code_app' && sortDirection === 'asc', 'arrow-down': sortColumn === 'code_app' && sortDirection === 'desc'}"></span>
+            </th>
+            <th (click)="sortTrav('code_piece')">Code Piece
+              <span [ngClass]="{'arrow-up': sortColumn === 'code_piece' && sortDirection === 'asc', 'arrow-down': sortColumn === 'code_piece' && sortDirection === 'desc'}"></span>
+            </th>
+            <th (click)="sortTrav('qte')">Quantite
+              <span [ngClass]="{'arrow-up': sortColumn === 'qte' && sortDirection === 'asc', 'arrow-down': sortColumn === 'qte' && sortDirection === 'desc'}"></span>
+            </th>
+            <th>Delete</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let travail of filteredTravailList; let i = index">
+            <td (click)="openDialog(travail)" style="cursor: pointer; color: blue; text-decoration: underline;">
+              {{ travail.code_app }}
+            </td>
+            <td>{{ travail.code_piece }}</td>
+            <td>{{ travail.qte }}</td>
+            <td><button (click)="deleteTravail(selectedExpertiseNumExp, travail.code_app, travail.code_piece)">Delete</button></td>
+            <td><button (click)="editTravail(travail)">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- ********************************************************APP history pop up******* -->
+    <dialog id="detailDialog">
+        <form method="dialog">
+          <h2>Details for Code App: {{ selectedCodeApp }}</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Num Expertise</th>
+                <th>Code Appareil</th>
+                <th>Code Piece</th>
+                <th>Quantite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let historyItem of selectedTravailHistory">
+                <td>{{ historyItem.num_exp }}</td>
+                <td>{{ historyItem.code_app }}</td>
+                <td>{{ historyItem.code_piece }}</td>
+                <td>{{ historyItem.qte }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" (click)="closeDialog()">Close</button>
+        </form>
+      </dialog>
+    </div>
+  
+
+<!-- ********************************************************Travaux************************************************************************* -->
+
+    <div id="modify-travail-container" *ngIf="view === 'E'">
+        <form (submit)="updateTravail()">
+          <label for="code_app">Date Exp:</label>
+          <input type="string" id="code_app" [(ngModel)]="newTravail.code_app" name="code_app" required>
+      
+          <label for="code_piece">N°dps:</label>
+          <input type="string" id="code_piece" [(ngModel)]="newTravail.code_piece" name="code_piece" required>
+      
+          <label for="qte">Date Dps:</label>
+          <input type="number" id="qte" [(ngModel)]="newTravail.qte" name="qte" required>
+      
+          <button type="submit" >Modif Expertise</button>
+          <button type="button" (click)="cancelEditTravail()">Cancel</button>
+        </form>
+      </div>
+
+
+
+      
+    <div id="add-travail-container" *ngIf="view === 'e'">
+
+        <form (submit)="addTravailseperate()">
+          <label for="code_app">Code App:</label>
+          <input type="string" id="code_app" [(ngModel)]="newTravail.code_app" name="code_app" required>
+    
+          <label for="code_piece">Code Piece:</label>
+          <input type="string" id="code_piece" [(ngModel)]="newTravail.code_piece" name="code_piece" required>
+    
+          <label for="qte">Quantite:</label>
+          <input type="number" id="qte" [(ngModel)]="newTravail.qte" name="qte" required>
+    
+          <button type="submit">Add Travail</button>
+          <button type="button" (click)="this.view='D'">Finish</button>
+          <button type="button" (click)="cancelEdit()">Cancel</button>
+        </form>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+</body>
+</html>

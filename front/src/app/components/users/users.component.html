@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTIM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./users.component.scss">
+</head>
+<body>
+    <div class="header">
+        <nav>
+          <a href="http://ctim.cpg.com.tn/portail/">
+            <img src="assets/images/logoCPGpng.png" class="logo" alt="Logo">
+          </a>
+          <ul class="nav-links">
+            <li class="dropdown" >
+              <a href="javascript:void(0)">Expertises</a>
+              <div class="dropdown-content">
+                <a href="expertises">View Expertises</a>
+                <a href="expertises">Add Expertise</a>
+              </div>
+            </li>
+            <li >
+                <a  href="appareils">Appareils</a>
+              </li>
+              <li >
+                <a  href="pieces">Pieces</a>
+              </li>
+            <li >
+              <a  href="imputations">Imputations</a>
+            </li>
+            <li class="user-menu" >
+              <a class="user-button" href="javascript:void(0)">User</a>
+              <div class="dropdown-content">
+                <a (click)="signout()">Logout</a>
+                <a href="utilisateurs">Manage</a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    
+
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+
+    <div *ngIf="view === 'A'">
+        <div id="search-container">
+            <input placeholder="search" id="search-input" #searchInput>
+            <button id="search-btn" (click)="search(searchInput.value)">Search</button>
+        </div>
+        
+        <div id="table-container">
+            <table id="table">
+                <thead>
+                    <tr>
+                        <th (click)="sort('matricule')">Matricule
+                            <span [ngClass]="{'arrow-up': sortColumn === 'matricule' && sortDirection === 'asc', 'arrow-down': sortColumn === 'matricule' && sortDirection === 'desc'}"></span>
+                        </th>
+                        <th (click)="sort('nom_prenom')">Nom Prenom
+                            <span [ngClass]="{'arrow-up': sortColumn === 'nom_prenom' && sortDirection === 'asc', 'arrow-down': sortColumn === 'nom_prenom' && sortDirection === 'desc'}"></span>
+                        </th>
+                        
+                        <th>Delete</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tbody>
+                        <tr *ngFor="let user of filteredUserList; let i = index">
+                          <td>{{ user.matricule }}</td>
+                          <td>{{ user.nom_prenom }}</td>
+                        <td><button (click)="deleteUser(user.matricule)">Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div id="add-expertise-container" *ngIf="view === 'B'">
+
+            <form (submit)="addUser()">
+              <label for="date_exp">matricule:</label>
+              <input type="date" id="date_exp" [(ngModel)]="newUser.matricule" name="date_exp" required>
+        
+              <label for="num_dps">mdp:</label>
+              <input type="number" id="num_dps" [(ngModel)]="newUser.password" name="num_dps" required>
+        
+              <label for="date_dps">nom_prenom:</label>
+              <input type="date" id="date_dps" [(ngModel)]="newUser.nom_prenom" name="date_dps" required>
+
+              <button type="submit">Add User</button>
+              <button type="button" (click)="switchToViewA()">Cancel</button>
+            </form>
+    </div>
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+</body>
+</html>
